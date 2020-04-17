@@ -1,0 +1,16 @@
+# source
+lib
+tests
+index.ts
+package-lock.json
+tslint.json
+tsconfig.json
+.prettierrc
+
+# github
+.github
+CONTRIBUTING.md
+renovate.json
+
+# ci
+.circleci
