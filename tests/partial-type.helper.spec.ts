@@ -20,7 +20,7 @@ describe('PartialType', () => {
       const validationKeys = getValidationMetadataByTarget(UpdateUserDto).map(
         item => item.propertyName,
       );
-      expect(validationKeys).toEqual(['password']);
+      expect(validationKeys).toEqual(['password', 'password']);
     });
     describe('when object does not fulfil validation rules', () => {
       it('"validate" should return validation errors', async () => {

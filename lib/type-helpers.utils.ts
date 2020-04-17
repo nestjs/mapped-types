@@ -32,17 +32,18 @@ export function inheritValidationMetadata(
       parentClass,
       null!,
     );
-    targetMetadata
+    return targetMetadata
       .filter(
         ({ propertyName }) =>
           !isPropertyInherited || isPropertyInherited(propertyName),
       )
-      .forEach(value =>
+      .map(value => {
         metadataStorage.addValidationMetadata({
           ...value,
           target: targetClass,
-        }),
-      );
+        });
+        return value.propertyName;
+      });
   } catch (err) {
     logger.error(
       `Validation ("class-validator") metadata cannot be inherited for "${parentClass.name}" class.`,
