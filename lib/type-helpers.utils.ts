@@ -117,7 +117,15 @@ function inheritTransformerMetadata(
         return [key, { ...metadata, target: targetClass }];
       });
 
-    metadataMap.set(targetClass, new Map(targetMetadataEntries));
+    if (metadataMap.has(targetClass)) {
+      const existingRules = metadataMap.get(targetClass)!.entries();
+      metadataMap.set(
+        targetClass,
+        new Map([...existingRules, ...targetMetadataEntries]),
+      );
+    } else {
+      metadataMap.set(targetClass, new Map(targetMetadataEntries));
+    }
   }
 }
 

@@ -11,8 +11,8 @@ export function IntersectionType<A, B>(
   abstract class IntersectionClassType {}
 
   inheritValidationMetadata(classARef, IntersectionClassType);
-  inheritTransformationMetadata(classARef, IntersectionClassType);
   inheritValidationMetadata(classBRef, IntersectionClassType);
+  inheritTransformationMetadata(classARef, IntersectionClassType);
   inheritTransformationMetadata(classBRef, IntersectionClassType);
 
   Object.defineProperty(IntersectionClassType, 'name', {
