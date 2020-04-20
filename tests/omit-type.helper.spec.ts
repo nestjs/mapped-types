@@ -8,7 +8,7 @@ describe('OmitType', () => {
     @MinLength(10)
     login!: string;
 
-    @Transform(str => str + '_transformed')
+    @Transform((str) => str + '_transformed')
     @MinLength(10)
     password!: string;
   }
@@ -18,7 +18,7 @@ describe('OmitType', () => {
   describe('Validation metadata', () => {
     it('should inherit metadata with "login" property excluded', () => {
       const validationKeys = getValidationMetadataByTarget(UpdateUserDto).map(
-        item => item.propertyName,
+        (item) => item.propertyName,
       );
       expect(validationKeys).toEqual(['password']);
     });

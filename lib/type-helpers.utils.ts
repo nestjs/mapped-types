@@ -25,9 +25,11 @@ export function inheritValidationMetadata(
   }
   try {
     const classValidator: typeof import('class-validator') = require('class-validator');
-    const metadataStorage = classValidator.getFromContainer(
-      classValidator.MetadataStorage,
-    );
+    const metadataStorage: import('class-validator').MetadataStorage = (classValidator as any)
+      .getMetadataStorage
+      ? (classValidator as any).getMetadataStorage()
+      : classValidator.getFromContainer(classValidator.MetadataStorage);
+
     const targetMetadata = metadataStorage.getTargetValidationMetadatas(
       parentClass,
       null!,
@@ -37,7 +39,7 @@ export function inheritValidationMetadata(
         ({ propertyName }) =>
           !isPropertyInherited || isPropertyInherited(propertyName),
       )
-      .map(value => {
+      .map((value) => {
         metadataStorage.addValidationMetadata({
           ...value,
           target: targetClass,
@@ -73,7 +75,7 @@ export function inheritTransformationMetadata(
       '_transformMetadatas',
       '_typeMetadatas',
     ];
-    transformMetadataKeys.forEach(key =>
+    transformMetadataKeys.forEach((key) =>
       inheritTransformerMetadata(
         key,
         parentClass,
@@ -109,7 +111,7 @@ function inheritTransformerMetadata(
       .map(([key, metadata]) => {
         if (Array.isArray(metadata)) {
           // "_transformMetadatas" is an array of elements
-          const targetMetadata = metadata.map(item => ({
+          const targetMetadata = metadata.map((item) => ({
             ...item,
             target: targetClass,
           }));
