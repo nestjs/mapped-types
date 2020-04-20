@@ -46,7 +46,7 @@ jobs:
       - *install-deps
       - run:
           name: Integration tests
-          command: npm run test:integration
+          command: npm run test:e2e
 
 workflows:
   version: 2
