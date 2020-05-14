@@ -6,7 +6,7 @@ import {
 
 export function OmitType<T, K extends keyof T>(
   classRef: Type<T>,
-  keys: K[],
+  keys: readonly K[],
 ): Type<Omit<T, typeof keys[number]>> {
   abstract class OmitClassType {}
 
