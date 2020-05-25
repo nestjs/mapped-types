@@ -15,10 +15,23 @@ export function applyIsOptionalDecorator(
   decoratorFactory(targetClass.prototype, propertyKey);
 }
 
+export function applyIsDefinedDecorator(
+  targetClass: Function,
+  propertyKey: string,
+) {
+  if (!isClassValidatorAvailable()) {
+    return;
+  }
+  const classValidator: typeof import('class-validator') = require('class-validator');
+  const decoratorFactory = classValidator.IsDefined();
+  decoratorFactory(targetClass.prototype, propertyKey);
+}
+
 export function inheritValidationMetadata(
   parentClass: Type<any>,
   targetClass: Function,
   isPropertyInherited?: (key: string) => boolean,
+  preValidationAddHook?: (key: string) => unknown,
 ) {
   if (!isClassValidatorAvailable()) {
     return;
@@ -40,6 +53,7 @@ export function inheritValidationMetadata(
           !isPropertyInherited || isPropertyInherited(propertyName),
       )
       .map((value) => {
+        preValidationAddHook && preValidationAddHook(value.propertyName);
         metadataStorage.addValidationMetadata({
           ...value,
           target: targetClass,
@@ -100,35 +114,41 @@ function inheritTransformerMetadata(
   const classTransformer: typeof import('class-transformer/storage') = require('class-transformer/storage');
   const metadataStorage = classTransformer.defaultMetadataStorage;
 
-  if (metadataStorage[key].has(parentClass)) {
-    const metadataMap = metadataStorage[key] as Map<Function, Map<string, any>>;
-    const parentMetadata = metadataMap.get(parentClass);
+  while (parentClass && parentClass !== Object) {
+    if (metadataStorage[key].has(parentClass)) {
+      const metadataMap = metadataStorage[key] as Map<
+        Function,
+        Map<string, any>
+      >;
+      const parentMetadata = metadataMap.get(parentClass);
 
-    const targetMetadataEntries: Iterable<[string, any]> = Array.from(
-      parentMetadata!.entries(),
-    )
-      .filter(([key]) => !isPropertyInherited || isPropertyInherited(key))
-      .map(([key, metadata]) => {
-        if (Array.isArray(metadata)) {
-          // "_transformMetadatas" is an array of elements
-          const targetMetadata = metadata.map((item) => ({
-            ...item,
-            target: targetClass,
-          }));
-          return [key, targetMetadata];
-        }
-        return [key, { ...metadata, target: targetClass }];
-      });
+      const targetMetadataEntries: Iterable<[string, any]> = Array.from(
+        parentMetadata!.entries(),
+      )
+        .filter(([key]) => !isPropertyInherited || isPropertyInherited(key))
+        .map(([key, metadata]) => {
+          if (Array.isArray(metadata)) {
+            // "_transformMetadatas" is an array of elements
+            const targetMetadata = metadata.map((item) => ({
+              ...item,
+              target: targetClass,
+            }));
+            return [key, targetMetadata];
+          }
+          return [key, { ...metadata, target: targetClass }];
+        });
 
-    if (metadataMap.has(targetClass)) {
-      const existingRules = metadataMap.get(targetClass)!.entries();
-      metadataMap.set(
-        targetClass,
-        new Map([...existingRules, ...targetMetadataEntries]),
-      );
-    } else {
-      metadataMap.set(targetClass, new Map(targetMetadataEntries));
+      if (metadataMap.has(targetClass)) {
+        const existingRules = metadataMap.get(targetClass)!.entries();
+        metadataMap.set(
+          targetClass,
+          new Map([...existingRules, ...targetMetadataEntries]),
+        );
+      } else {
+        metadataMap.set(targetClass, new Map(targetMetadataEntries));
+      }
     }
+    parentClass = Object.getPrototypeOf(parentClass);
   }
 }
 

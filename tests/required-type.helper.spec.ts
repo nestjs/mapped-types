@@ -1,9 +1,9 @@
 import { classToClass, Expose, Transform, Type } from 'class-transformer';
 import { IsString, validate } from 'class-validator';
-import { PartialType } from '../lib';
+import { RequiredType } from '../lib';
 import { getValidationMetadataByTarget } from './type-helpers.test-utils';
 
-describe('PartialType', () => {
+describe('RequiredType', () => {
   class BaseUserDto {
     @IsString()
     @Transform((str) => str + '_transformed')
@@ -20,7 +20,7 @@ describe('PartialType', () => {
     password!: string;
   }
 
-  class UpdateUserDto extends PartialType(CreateUserDto) {}
+  class UpdateUserDto extends RequiredType(CreateUserDto) {}
 
   describe('Validation metadata', () => {
     it('should inherit metadata', () => {
@@ -29,8 +29,8 @@ describe('PartialType', () => {
       );
       expect(validationKeys).toEqual([
         'password',
-        'parentProperty',
         'password',
+        'parentProperty',
         'parentProperty',
       ]);
     });
@@ -41,9 +41,13 @@ describe('PartialType', () => {
 
         const validationErrors = await validate(updateDto);
 
-        expect(validationErrors.length).toEqual(1);
+        expect(validationErrors.length).toEqual(2);
         expect(validationErrors[0].constraints).toEqual({
           isString: 'password must be a string',
+        });
+        expect(validationErrors[1].constraints).toEqual({
+          isDefined: 'parentProperty should not be null or undefined',
+          isString: 'parentProperty must be a string',
         });
       });
     });
@@ -51,6 +55,7 @@ describe('PartialType', () => {
       it('"validate" should return an empty array', async () => {
         const updateDto = new UpdateUserDto();
         updateDto.password = '1234567891011';
+        updateDto.parentProperty = 'test';
 
         const validationErrors = await validate(updateDto);
         expect(validationErrors.length).toEqual(0);
