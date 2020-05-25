@@ -15,23 +15,10 @@ export function applyIsOptionalDecorator(
   decoratorFactory(targetClass.prototype, propertyKey);
 }
 
-export function applyIsDefinedDecorator(
-  targetClass: Function,
-  propertyKey: string,
-) {
-  if (!isClassValidatorAvailable()) {
-    return;
-  }
-  const classValidator: typeof import('class-validator') = require('class-validator');
-  const decoratorFactory = classValidator.IsDefined();
-  decoratorFactory(targetClass.prototype, propertyKey);
-}
-
 export function inheritValidationMetadata(
   parentClass: Type<any>,
   targetClass: Function,
   isPropertyInherited?: (key: string) => boolean,
-  preValidationAddHook?: (key: string) => unknown,
 ) {
   if (!isClassValidatorAvailable()) {
     return;
@@ -53,7 +40,6 @@ export function inheritValidationMetadata(
           !isPropertyInherited || isPropertyInherited(propertyName),
       )
       .map((value) => {
-        preValidationAddHook && preValidationAddHook(value.propertyName);
         metadataStorage.addValidationMetadata({
           ...value,
           target: targetClass,
