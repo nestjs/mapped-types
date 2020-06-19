@@ -1,4 +1,5 @@
 import { Type } from '@nestjs/common';
+import { MappedType } from './mapped-type.interface';
 import {
   inheritTransformationMetadata,
   inheritValidationMetadata,
@@ -7,7 +8,7 @@ import {
 export function OmitType<T, K extends keyof T>(
   classRef: Type<T>,
   keys: readonly K[],
-): Type<Omit<T, typeof keys[number]>> {
+): MappedType<Omit<T, typeof keys[number]>> {
   abstract class OmitClassType {}
 
   const isInheritedPredicate = (propertyKey: string) =>
@@ -15,5 +16,5 @@ export function OmitType<T, K extends keyof T>(
   inheritValidationMetadata(classRef, OmitClassType, isInheritedPredicate);
   inheritTransformationMetadata(classRef, OmitClassType, isInheritedPredicate);
 
-  return OmitClassType as Type<Omit<T, typeof keys[number]>>;
+  return OmitClassType as MappedType<Omit<T, typeof keys[number]>>;
 }
