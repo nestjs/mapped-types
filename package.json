@@ -38,7 +38,7 @@
     "release-it": "13.6.5",
     "rimraf": "3.0.2",
     "ts-jest": "26.1.2",
-    "typescript": "3.9.6"
+    "typescript": "3.9.7"
   },
   "peerDependencies": {
     "@nestjs/common": "^7.0.8",
