@@ -18,8 +18,8 @@
     "release": "release-it"
   },
   "devDependencies": {
-    "@commitlint/cli": "9.1.1",
-    "@commitlint/config-angular": "9.1.1",
+    "@commitlint/cli": "9.1.2",
+    "@commitlint/config-angular": "9.1.2",
     "@nestjs/common": "7.4.2",
     "@types/jest": "26.0.10",
     "@types/node": "7.10.8",
