@@ -1,4 +1,5 @@
 import { Type } from '@nestjs/common';
+import { MappedType } from './mapped-type.interface';
 import {
   inheritPropertyInitializers,
   inheritTransformationMetadata,
@@ -8,7 +9,7 @@ import {
 export function IntersectionType<A, B>(
   classARef: Type<A>,
   classBRef: Type<B>,
-): Type<A & B> {
+): MappedType<A & B> {
   abstract class IntersectionClassType {
     constructor() {
       inheritPropertyInitializers(this, classARef);
@@ -24,5 +25,5 @@ export function IntersectionType<A, B>(
   Object.defineProperty(IntersectionClassType, 'name', {
     value: `Intersection${classARef.name}${classBRef.name}`,
   });
-  return IntersectionClassType as Type<A & B>;
+  return IntersectionClassType as MappedType<A & B>;
 }
