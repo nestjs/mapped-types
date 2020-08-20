@@ -5,9 +5,9 @@ import { getValidationMetadataByTarget } from './type-helpers.test-utils';
 
 describe('PickType', () => {
   class CreateUserDto {
-    @Transform(str => str + '_transformed')
+    @Transform((str) => str + '_transformed')
     @MinLength(10)
-    login!: string;
+    login = 'defaultLogin';
 
     @MinLength(10)
     password!: string;
@@ -18,7 +18,7 @@ describe('PickType', () => {
   describe('Validation metadata', () => {
     it('should inherit metadata with "password" property excluded', () => {
       const validationKeys = getValidationMetadataByTarget(UpdateUserDto).map(
-        item => item.propertyName,
+        (item) => item.propertyName,
       );
       expect(validationKeys).toEqual(['login']);
     });
@@ -54,6 +54,14 @@ describe('PickType', () => {
 
       const transformedDto = classToClass(updateDto);
       expect(transformedDto.login).toEqual(login + '_transformed');
+    });
+  });
+
+  describe('Property initializers', () => {
+    it('should inherit property initializers', () => {
+      const updateUserDto = new UpdateUserDto();
+      expect((updateUserDto as any)['password']).toBeUndefined();
+      expect(updateUserDto.login).toEqual('defaultLogin');
     });
   });
 });

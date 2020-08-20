@@ -10,7 +10,7 @@ describe('OmitType', () => {
 
     @Transform((str) => str + '_transformed')
     @MinLength(10)
-    password!: string;
+    password = 'defaultPassword';
   }
 
   class UpdateUserDto extends OmitType(CreateUserDto, ['login']) {}
@@ -54,6 +54,14 @@ describe('OmitType', () => {
 
       const transformedDto = classToClass(updateDto);
       expect(transformedDto.password).toEqual(password + '_transformed');
+    });
+  });
+
+  describe('Property initializers', () => {
+    it('should inherit property initializers', () => {
+      const updateUserDto = new UpdateUserDto();
+      expect((updateUserDto as any)['login']).toBeUndefined();
+      expect(updateUserDto.password).toEqual('defaultPassword');
     });
   });
 });

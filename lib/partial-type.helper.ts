@@ -1,18 +1,23 @@
 import { Type } from '@nestjs/common';
 import {
   applyIsOptionalDecorator,
+  inheritPropertyInitializers,
   inheritTransformationMetadata,
   inheritValidationMetadata,
 } from './type-helpers.utils';
 
 export function PartialType<T>(classRef: Type<T>): Type<Partial<T>> {
-  abstract class PartialClassType {}
+  abstract class PartialClassType {
+    constructor() {
+      inheritPropertyInitializers(this, classRef);
+    }
+  }
 
   const propertyKeys = inheritValidationMetadata(classRef, PartialClassType);
   inheritTransformationMetadata(classRef, PartialClassType);
 
   if (propertyKeys) {
-    propertyKeys.forEach(key => {
+    propertyKeys.forEach((key) => {
       applyIsOptionalDecorator(PartialClassType, key);
     });
   }

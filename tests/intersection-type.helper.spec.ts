@@ -6,18 +6,18 @@ import { getValidationMetadataByTarget } from './type-helpers.test-utils';
 describe('IntersectionType', () => {
   class ClassA {
     @MinLength(10)
-    login!: string;
+    login = 'defaultLoginWithMin10Chars';
 
-    @Transform(str => str + '_transformed')
+    @Transform((str) => str + '_transformed')
     @MinLength(10)
     password!: string;
   }
 
   class ClassB {
     @IsString()
-    firstName!: string;
+    firstName = 'defaultFirst';
 
-    @Transform(str => str + '_transformed')
+    @Transform((str) => str + '_transformed')
     @MinLength(5)
     lastName!: string;
   }
@@ -27,7 +27,7 @@ describe('IntersectionType', () => {
   describe('Validation metadata', () => {
     it('should inherit metadata for all properties from class A and class B', () => {
       const validationKeys = getValidationMetadataByTarget(UpdateUserDto).map(
-        item => item.propertyName,
+        (item) => item.propertyName,
       );
       expect(validationKeys).toEqual([
         'login',
@@ -43,17 +43,11 @@ describe('IntersectionType', () => {
 
         const validationErrors = await validate(updateDto);
 
-        expect(validationErrors.length).toEqual(4);
+        expect(validationErrors.length).toEqual(2);
         expect(validationErrors[0].constraints).toEqual({
-          minLength: 'login must be longer than or equal to 10 characters',
-        });
-        expect(validationErrors[1].constraints).toEqual({
           minLength: 'password must be longer than or equal to 10 characters',
         });
-        expect(validationErrors[2].constraints).toEqual({
-          isString: 'firstName must be a string',
-        });
-        expect(validationErrors[3].constraints).toEqual({
+        expect(validationErrors[1].constraints).toEqual({
           minLength: 'lastName must be longer than or equal to 5 characters',
         });
       });
@@ -84,6 +78,14 @@ describe('IntersectionType', () => {
       const transformedDto = classToClass(updateDto);
       expect(transformedDto.lastName).toEqual(lastName + '_transformed');
       expect(transformedDto.password).toEqual(password + '_transformed');
+    });
+  });
+
+  describe('Property initializers', () => {
+    it('should inherit property initializers', () => {
+      const updateUserDto = new UpdateUserDto();
+      expect(updateUserDto.login).toEqual('defaultLoginWithMin10Chars');
+      expect(updateUserDto.firstName).toEqual('defaultFirst');
     });
   });
 });

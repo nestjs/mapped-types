@@ -12,7 +12,7 @@ describe('PartialType', () => {
   }
 
   class CreateUserDto extends BaseUserDto {
-    login!: string;
+    login: string = 'defaultLogin';
 
     @Expose()
     @Transform((str) => str + '_transformed')
@@ -72,6 +72,13 @@ describe('PartialType', () => {
       expect(transformedDto.parentProperty).toEqual(
         parentProperty + '_transformed',
       );
+    });
+  });
+
+  describe('Property initializers', () => {
+    it('should inherit property initializers', () => {
+      const updateUserDto = new UpdateUserDto();
+      expect(updateUserDto.login).toEqual('defaultLogin');
     });
   });
 });

@@ -155,3 +155,26 @@ function isClassTransformerAvailable() {
     return false;
   }
 }
+
+export function inheritPropertyInitializers(
+  target: Record<string, any>,
+  sourceClass: Type<any>,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  isPropertyInherited = (key: string) => true,
+) {
+  try {
+    const tempInstance = new sourceClass();
+    const propertyNames = Object.getOwnPropertyNames(tempInstance);
+
+    propertyNames
+      .filter(
+        (propertyName) =>
+          typeof tempInstance[propertyName] !== 'undefined' &&
+          typeof target[propertyName] === 'undefined',
+      )
+      .filter((propertyName) => isPropertyInherited(propertyName))
+      .forEach((propertyName) => {
+        target[propertyName] = tempInstance[propertyName];
+      });
+  } catch {}
+}
