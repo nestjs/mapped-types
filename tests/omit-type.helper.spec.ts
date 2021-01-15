@@ -8,7 +8,7 @@ describe('OmitType', () => {
     @MinLength(10)
     login!: string;
 
-    @Transform((str) => str + '_transformed')
+    @Transform(({ value }) => value + '_transformed')
     @MinLength(10)
     password = 'defaultPassword';
   }

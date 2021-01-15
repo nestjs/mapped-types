@@ -97,8 +97,16 @@ function inheritTransformerMetadata(
   targetClass: Function,
   isPropertyInherited?: (key: string) => boolean,
 ) {
-  const classTransformer: typeof import('class-transformer/storage') = require('class-transformer/storage');
-  const metadataStorage = classTransformer.defaultMetadataStorage;
+  let classTransformer: any;
+  try {
+    /** "class-transformer" >= v0.3.x */
+    classTransformer = require('class-transformer/cjs/storage');
+  } catch {
+    /** "class-transformer" <= v0.3.x */
+    classTransformer = require('class-transformer/storage');
+  }
+  const metadataStorage /*: typeof import('class-transformer/types/storage').defaultMetadataStorage */ =
+    classTransformer.defaultMetadataStorage;
 
   while (parentClass && parentClass !== Object) {
     if (metadataStorage[key].has(parentClass)) {

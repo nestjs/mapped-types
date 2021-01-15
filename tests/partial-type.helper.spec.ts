@@ -6,7 +6,7 @@ import { getValidationMetadataByTarget } from './type-helpers.test-utils';
 describe('PartialType', () => {
   class BaseUserDto {
     @IsString()
-    @Transform((str) => str + '_transformed')
+    @Transform(({ value }) => value + '_transformed')
     @Type(() => String)
     parentProperty!: string;
   }
@@ -15,7 +15,7 @@ describe('PartialType', () => {
     login: string = 'defaultLogin';
 
     @Expose()
-    @Transform((str) => str + '_transformed')
+    @Transform(({ value }) => value + '_transformed')
     @IsString()
     password!: string;
   }

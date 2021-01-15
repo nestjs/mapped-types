@@ -5,7 +5,7 @@ import { getValidationMetadataByTarget } from './type-helpers.test-utils';
 
 describe('PickType', () => {
   class CreateUserDto {
-    @Transform((str) => str + '_transformed')
+    @Transform(({ value }) => value + '_transformed')
     @MinLength(10)
     login = 'defaultLogin';
 

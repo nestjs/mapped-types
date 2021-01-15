@@ -8,7 +8,7 @@ describe('IntersectionType', () => {
     @MinLength(10)
     login = 'defaultLoginWithMin10Chars';
 
-    @Transform((str) => str + '_transformed')
+    @Transform(({ value }) => value + '_transformed')
     @MinLength(10)
     password!: string;
   }
@@ -17,7 +17,7 @@ describe('IntersectionType', () => {
     @IsString()
     firstName = 'defaultFirst';
 
-    @Transform((str) => str + '_transformed')
+    @Transform(({ value }) => value + '_transformed')
     @MinLength(5)
     lastName!: string;
   }
