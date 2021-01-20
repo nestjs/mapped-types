@@ -10,6 +10,8 @@ export function getValidationMetadataByTarget(target: Function) {
   const targetMetadata = metadataStorage.getTargetValidationMetadatas(
     target,
     null!,
+    false,
+    false,
   );
   return targetMetadata;
 }

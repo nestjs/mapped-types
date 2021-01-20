@@ -33,6 +33,8 @@ export function inheritValidationMetadata(
     const targetMetadata = metadataStorage.getTargetValidationMetadatas(
       parentClass,
       null!,
+      false,
+      false,
     );
     return targetMetadata
       .filter(
