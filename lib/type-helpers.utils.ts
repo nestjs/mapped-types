@@ -30,11 +30,11 @@ export function inheritValidationMetadata(
       ? (classValidator as any).getMetadataStorage()
       : classValidator.getFromContainer(classValidator.MetadataStorage);
 
-    const targetMetadata = metadataStorage.getTargetValidationMetadatas(
-      parentClass,
-      null!,
-      false,
-      false,
+    const getTargetValidationMetadatasArgs = [parentClass, null!, false, false];
+    const targetMetadata: ReturnType<
+      typeof metadataStorage.getTargetValidationMetadatas
+    > = (metadataStorage.getTargetValidationMetadatas as Function)(
+      ...getTargetValidationMetadatasArgs,
     );
     return targetMetadata
       .filter(
