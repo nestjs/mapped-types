@@ -42,6 +42,20 @@ export function inheritValidationMetadata(
           !isPropertyInherited || isPropertyInherited(propertyName),
       )
       .map((value) => {
+        const originalType = Reflect.getMetadata(
+          'design:type',
+          parentClass.prototype,
+          value.propertyName,
+        );
+        if (originalType) {
+          Reflect.defineMetadata(
+            'design:type',
+            originalType,
+            targetClass.prototype,
+            value.propertyName,
+          );
+        }
+
         metadataStorage.addValidationMetadata({
           ...value,
           target: targetClass,
