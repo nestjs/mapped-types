@@ -22,7 +22,6 @@ describe('IntersectionType', () => {
     lastName!: string;
   }
 
-  interface UpdateUserDto extends ClassA, ClassB {}
   class UpdateUserDto extends IntersectionType(ClassA, ClassB) {}
 
   describe('Validation metadata', () => {

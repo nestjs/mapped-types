@@ -31,7 +31,6 @@ describe('IntersectionType', () => {
     patronymic!: string;
   }
 
-  interface UpdateUserDto extends ClassA, ClassB, ClassC {}
   class UpdateUserDto extends IntersectionType(ClassA, ClassB, ClassC) {}
 
   describe('Validation metadata', () => {

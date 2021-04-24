@@ -6,6 +6,24 @@ import {
   inheritValidationMetadata,
 } from './type-helpers.utils';
 
+export function IntersectionType<A, B>(
+  target: Type<A>,
+  source: Type<B>,
+): MappedType<A & B>;
+
+export function IntersectionType<A, B, C>(
+  target: Type<A>,
+  sourceB: Type<B>,
+  sourceC: Type<C>,
+): MappedType<A & B & C>;
+
+export function IntersectionType<A, B, C, D>(
+  target: Type<A>,
+  sourceB: Type<B>,
+  sourceC: Type<C>,
+  sourceD: Type<D>,
+): MappedType<A & B & C & D>;
+
 export function IntersectionType<A, T extends { new (...arg: any): any }[]>(
   classA: Type<A>,
   ...classRefs: T
