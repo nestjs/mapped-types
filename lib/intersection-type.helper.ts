@@ -6,24 +6,31 @@ import {
   inheritValidationMetadata,
 } from './type-helpers.utils';
 
-export function IntersectionType<A, B>(
-  classARef: Type<A>,
-  classBRef: Type<B>,
-): MappedType<A & B> {
+export function IntersectionType<A, T extends { new (...arg: any): any }[]>(
+  classA: Type<A>,
+  ...classRefs: T
+): MappedType<A> {
+  const allClassRefs = [classA, ...classRefs];
+
   abstract class IntersectionClassType {
     constructor() {
-      inheritPropertyInitializers(this, classARef);
-      inheritPropertyInitializers(this, classBRef);
+      allClassRefs.forEach((classRef) => {
+        inheritPropertyInitializers(this, classRef);
+      });
     }
   }
 
-  inheritValidationMetadata(classARef, IntersectionClassType);
-  inheritValidationMetadata(classBRef, IntersectionClassType);
-  inheritTransformationMetadata(classARef, IntersectionClassType);
-  inheritTransformationMetadata(classBRef, IntersectionClassType);
-
-  Object.defineProperty(IntersectionClassType, 'name', {
-    value: `Intersection${classARef.name}${classBRef.name}`,
+  allClassRefs.forEach((classRef) => {
+    inheritValidationMetadata(classRef, IntersectionClassType);
+    inheritTransformationMetadata(classRef, IntersectionClassType);
   });
-  return IntersectionClassType as MappedType<A & B>;
+
+  const intersectedNames = allClassRefs.reduce(
+    (prev, ref) => prev + ref.name,
+    '',
+  );
+  Object.defineProperty(IntersectionClassType, 'name', {
+    value: `Intersection${intersectedNames}`,
+  });
+  return IntersectionClassType as MappedType<A>;
 }

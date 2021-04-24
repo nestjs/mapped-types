@@ -22,8 +22,17 @@ describe('IntersectionType', () => {
     lastName!: string;
   }
 
-  interface UpdateUserDto extends ClassA, ClassB {}
-  class UpdateUserDto extends IntersectionType(ClassA, ClassB) {}
+  class ClassC {
+    @MinLength(10)
+    hash = 'defaultHashWithMin5Chars';
+
+    @Transform(({ value }) => value + '_transformed')
+    @MinLength(5)
+    patronymic!: string;
+  }
+
+  interface UpdateUserDto extends ClassA, ClassB, ClassC {}
+  class UpdateUserDto extends IntersectionType(ClassA, ClassB, ClassC) {}
 
   describe('Validation metadata', () => {
     it('should inherit metadata for all properties from class A and class B', () => {
@@ -35,6 +44,8 @@ describe('IntersectionType', () => {
         'password',
         'firstName',
         'lastName',
+        'hash',
+        'patronymic',
       ]);
     });
     describe('when object does not fulfil validation rules', () => {
@@ -44,12 +55,15 @@ describe('IntersectionType', () => {
 
         const validationErrors = await validate(updateDto);
 
-        expect(validationErrors.length).toEqual(2);
+        expect(validationErrors.length).toEqual(3);
         expect(validationErrors[0].constraints).toEqual({
           minLength: 'password must be longer than or equal to 10 characters',
         });
         expect(validationErrors[1].constraints).toEqual({
           minLength: 'lastName must be longer than or equal to 5 characters',
+        });
+        expect(validationErrors[2].constraints).toEqual({
+          minLength: 'patronymic must be longer than or equal to 5 characters',
         });
       });
     });
@@ -60,6 +74,7 @@ describe('IntersectionType', () => {
         updateDto.firstName = 'firstNameTest';
         updateDto.lastName = 'lastNameTest';
         updateDto.login = 'mylogintesttest';
+        updateDto.patronymic = 'patronymicTest';
 
         const validationErrors = await validate(updateDto);
         expect(validationErrors.length).toEqual(0);
@@ -71,14 +86,17 @@ describe('IntersectionType', () => {
     it('should inherit transformer metadata', () => {
       const password = '1234567891011';
       const lastName = 'lastNameTest';
+      const patronymic = 'patronymicTest';
 
       const updateDto = new UpdateUserDto();
       updateDto.password = password;
       updateDto.lastName = lastName;
+      updateDto.patronymic = patronymic;
 
       const transformedDto = classToClass(updateDto);
       expect(transformedDto.lastName).toEqual(lastName + '_transformed');
       expect(transformedDto.password).toEqual(password + '_transformed');
+      expect(transformedDto.patronymic).toEqual(patronymic + '_transformed');
     });
   });
 
@@ -87,6 +105,7 @@ describe('IntersectionType', () => {
       const updateUserDto = new UpdateUserDto();
       expect(updateUserDto.login).toEqual('defaultLoginWithMin10Chars');
       expect(updateUserDto.firstName).toEqual('defaultFirst');
+      expect(updateUserDto.hash).toEqual('defaultHashWithMin5Chars');
     });
   });
 });
