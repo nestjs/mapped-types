@@ -67,9 +67,9 @@ body:
     validations:
       required: true
     attributes:
-      label: "NestJS version"
+      label: "Package version"
       description: |
-        Which version of `@nestjs/core` are you using?
+        Which version of `@nestjs/mapped-types` are you using?
         **Tip**: Make sure that all of yours `@nestjs/*` dependencies are in sync!
       placeholder: "8.1.3"
 
