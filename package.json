@@ -47,6 +47,14 @@
     "class-validator": "^0.11.1 || ^0.12.0 || ^0.13.0",
     "reflect-metadata": "^0.1.12"
   },
+  "peerDependenciesMeta": {
+    "class-validator": {
+      "optional": true
+    },
+    "class-transformer": {
+      "optional": true
+    }
+  }
   "lint-staged": {
     "*.ts": [
       "prettier --write"
