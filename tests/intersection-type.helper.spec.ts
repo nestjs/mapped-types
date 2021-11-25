@@ -1,4 +1,4 @@
-import { classToClass, Transform } from 'class-transformer';
+import { instanceToInstance, Transform } from 'class-transformer';
 import { IsString, MinLength, validate } from 'class-validator';
 import { IntersectionType } from '../lib';
 import { getValidationMetadataByTarget } from './type-helpers.test-utils';
@@ -75,7 +75,7 @@ describe('IntersectionType', () => {
       updateDto.password = password;
       updateDto.lastName = lastName;
 
-      const transformedDto = classToClass(updateDto);
+      const transformedDto = instanceToInstance(updateDto);
       expect(transformedDto.lastName).toEqual(lastName + '_transformed');
       expect(transformedDto.password).toEqual(password + '_transformed');
     });
