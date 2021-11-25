@@ -1,4 +1,4 @@
-import { classToClass, Transform } from 'class-transformer';
+import { instanceToInstance, Transform } from 'class-transformer';
 import { MinLength, validate } from 'class-validator';
 import { OmitType } from '../lib';
 import { getValidationMetadataByTarget } from './type-helpers.test-utils';
@@ -52,7 +52,7 @@ describe('OmitType', () => {
       const updateDto = new UpdateUserDto();
       updateDto.password = password;
 
-      const transformedDto = classToClass(updateDto);
+      const transformedDto = instanceToInstance(updateDto);
       expect(transformedDto.password).toEqual(password + '_transformed');
     });
   });
