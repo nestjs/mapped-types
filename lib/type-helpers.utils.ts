@@ -25,8 +25,9 @@ export function inheritValidationMetadata(
   }
   try {
     const classValidator: typeof import('class-validator') = require('class-validator');
-    const metadataStorage: import('class-validator').MetadataStorage = (classValidator as any)
-      .getMetadataStorage
+    const metadataStorage: import('class-validator').MetadataStorage = (
+      classValidator as any
+    ).getMetadataStorage
       ? (classValidator as any).getMetadataStorage()
       : classValidator.getFromContainer(classValidator.MetadataStorage);
 
