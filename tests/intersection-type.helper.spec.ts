@@ -1,5 +1,5 @@
 import { instanceToInstance, Transform } from 'class-transformer';
-import { IsString, MinLength, validate } from 'class-validator';
+import { IsString, MinLength, validate } from '@nestjs/class-validator';
 import { IntersectionType } from '../lib';
 import { getValidationMetadataByTarget } from './type-helpers.test-utils';
 

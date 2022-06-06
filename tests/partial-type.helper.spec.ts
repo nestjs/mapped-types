@@ -1,5 +1,5 @@
 import { Expose, instanceToInstance, Transform, Type } from 'class-transformer';
-import { IsString, validate } from 'class-validator';
+import { IsString, validate } from '@nestjs/class-validator';
 import { PartialType } from '../lib';
 import { getValidationMetadataByTarget } from './type-helpers.test-utils';
 

@@ -10,7 +10,7 @@ export function applyIsOptionalDecorator(
   if (!isClassValidatorAvailable()) {
     return;
   }
-  const classValidator: typeof import('class-validator') = require('class-validator');
+  const classValidator: typeof import('@nestjs/class-validator') = require('@nestjs/class-validator');
   const decoratorFactory = classValidator.IsOptional();
   decoratorFactory(targetClass.prototype, propertyKey);
 }
@@ -24,8 +24,8 @@ export function inheritValidationMetadata(
     return;
   }
   try {
-    const classValidator: typeof import('class-validator') = require('class-validator');
-    const metadataStorage: import('class-validator').MetadataStorage = (
+    const classValidator: typeof import('@nestjs/class-validator') = require('@nestjs/class-validator');
+    const metadataStorage: import('@nestjs/class-validator').MetadataStorage = (
       classValidator as any
     ).getMetadataStorage
       ? (classValidator as any).getMetadataStorage()
@@ -65,7 +65,7 @@ export function inheritValidationMetadata(
       });
   } catch (err) {
     logger.error(
-      `Validation ("class-validator") metadata cannot be inherited for "${parentClass.name}" class.`,
+      `Validation ("@nestjs/class-validator") metadata cannot be inherited for "${parentClass.name}" class.`,
     );
     logger.error(err);
   }
@@ -165,7 +165,7 @@ function inheritTransformerMetadata(
 
 function isClassValidatorAvailable() {
   try {
-    require('class-validator');
+    require('@nestjs/class-validator');
     return true;
   } catch {
     return false;

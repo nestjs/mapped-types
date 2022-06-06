@@ -1,5 +1,5 @@
 import { instanceToInstance, Transform } from 'class-transformer';
-import { MinLength, validate } from 'class-validator';
+import { MinLength, validate } from '@nestjs/class-validator';
 import { OmitType } from '../lib';
 import { getValidationMetadataByTarget } from './type-helpers.test-utils';
 

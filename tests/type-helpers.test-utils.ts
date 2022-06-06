@@ -1,7 +1,7 @@
-import { MetadataStorage } from 'class-validator';
+import { MetadataStorage } from '@nestjs/class-validator';
 
 export function getValidationMetadataByTarget(target: Function) {
-  const classValidator: typeof import('class-validator') = require('class-validator');
+  const classValidator: typeof import('@nestjs/class-validator') = require('@nestjs/class-validator');
   const metadataStorage: MetadataStorage = (classValidator as any)
     .getMetadataStorage
     ? (classValidator as any).getMetadataStorage()
