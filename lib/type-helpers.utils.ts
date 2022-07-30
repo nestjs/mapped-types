@@ -181,6 +181,18 @@ function isClassTransformerAvailable() {
   }
 }
 
+function getPropertyDescriptors(obj: any): {
+  [x: string]: PropertyDescriptor;
+} {
+  const prototype = Object.getPrototypeOf(obj);
+  return prototype
+    ? Object.assign(
+        Object.getOwnPropertyDescriptors(obj),
+        getPropertyDescriptors(prototype),
+      )
+    : {};
+}
+
 export function inheritPropertyInitializers(
   target: Record<string, any>,
   sourceClass: Type<any>,
@@ -189,17 +201,18 @@ export function inheritPropertyInitializers(
 ) {
   try {
     const tempInstance = new sourceClass();
-    const propertyNames = Object.getOwnPropertyNames(tempInstance);
+    const descriptors = getPropertyDescriptors(tempInstance);
 
-    propertyNames
+    const targetDescriptors = Object.keys(descriptors)
       .filter(
-        (propertyName) =>
-          typeof tempInstance[propertyName] !== 'undefined' &&
-          typeof target[propertyName] === 'undefined',
+        (propertyKey) =>
+          isPropertyInherited(propertyKey) && propertyKey !== 'constructor',
       )
-      .filter((propertyName) => isPropertyInherited(propertyName))
-      .forEach((propertyName) => {
-        target[propertyName] = tempInstance[propertyName];
-      });
+      .reduce(
+        (d, propertyKey) =>
+          Object.assign(d, { [propertyKey]: descriptors[propertyKey] }),
+        {},
+      );
+    Object.defineProperties(target, targetDescriptors);
   } catch {}
 }
