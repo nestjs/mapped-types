@@ -1,5 +1,5 @@
-import { instanceToInstance, Transform } from 'class-transformer';
-import { MinLength, validate } from 'class-validator';
+import { Expose, instanceToInstance, Transform } from 'class-transformer';
+import { MaxLength, MinLength, validate } from 'class-validator';
 import { PickType } from '../lib';
 import { getValidationMetadataByTarget } from './type-helpers.test-utils';
 
@@ -11,9 +11,16 @@ describe('PickType', () => {
 
     @MinLength(10)
     password!: string;
+
+    get loginLength() {
+      return this.login.length;
+    }
   }
 
-  class UpdateUserDto extends PickType(CreateUserDto, ['login']) {}
+  class UpdateUserDto extends PickType(CreateUserDto, [
+    'login',
+    'loginLength',
+  ]) {}
 
   describe('Validation metadata', () => {
     it('should inherit metadata with "password" property excluded', () => {
@@ -62,6 +69,7 @@ describe('PickType', () => {
       const updateUserDto = new UpdateUserDto();
       expect((updateUserDto as any)['password']).toBeUndefined();
       expect(updateUserDto.login).toEqual('defaultLogin');
+      expect(updateUserDto.loginLength).toEqual(12);
     });
   });
 });

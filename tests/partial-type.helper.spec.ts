@@ -18,6 +18,10 @@ describe('PartialType', () => {
     @Transform(({ value }) => value + '_transformed')
     @IsString()
     password!: string;
+
+    get loginLength() {
+      return this.login.length;
+    }
   }
 
   class UpdateUserDto extends PartialType(CreateUserDto) {}
@@ -79,6 +83,7 @@ describe('PartialType', () => {
     it('should inherit property initializers', () => {
       const updateUserDto = new UpdateUserDto();
       expect(updateUserDto.login).toEqual('defaultLogin');
+      expect(updateUserDto.loginLength).toEqual(12);
     });
   });
 });

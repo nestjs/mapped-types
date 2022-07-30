@@ -20,6 +20,10 @@ describe('IntersectionType', () => {
     @Transform(({ value }) => value + '_transformed')
     @MinLength(5)
     lastName!: string;
+
+    get name() {
+      return this.firstName + ' ' + this.lastName;
+    }
   }
 
   class UpdateUserDto extends IntersectionType(ClassA, ClassB) {}
@@ -86,6 +90,7 @@ describe('IntersectionType', () => {
       const updateUserDto = new UpdateUserDto();
       expect(updateUserDto.login).toEqual('defaultLoginWithMin10Chars');
       expect(updateUserDto.firstName).toEqual('defaultFirst');
+      expect(updateUserDto.name).toEqual('defaultFirst undefined');
     });
   });
 });

@@ -11,9 +11,20 @@ describe('OmitType', () => {
     @Transform(({ value }) => value + '_transformed')
     @MinLength(10)
     password = 'defaultPassword';
+
+    get loginLength() {
+      return this.login.length;
+    }
+
+    get passwordLength() {
+      return this.password.length;
+    }
   }
 
-  class UpdateUserDto extends OmitType(CreateUserDto, ['login']) {}
+  class UpdateUserDto extends OmitType(CreateUserDto, [
+    'login',
+    'loginLength',
+  ]) {}
 
   describe('Validation metadata', () => {
     it('should inherit metadata with "login" property excluded', () => {
@@ -61,7 +72,9 @@ describe('OmitType', () => {
     it('should inherit property initializers', () => {
       const updateUserDto = new UpdateUserDto();
       expect((updateUserDto as any)['login']).toBeUndefined();
+      expect((updateUserDto as any)['loginLength']).toBeUndefined();
       expect(updateUserDto.password).toEqual('defaultPassword');
+      expect(updateUserDto.passwordLength).toEqual(15);
     });
   });
 });
