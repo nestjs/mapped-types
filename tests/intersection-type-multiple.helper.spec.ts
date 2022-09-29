@@ -31,7 +31,23 @@ describe('IntersectionType', () => {
     patronymic!: string;
   }
 
-  class UpdateUserDto extends IntersectionType(ClassA, ClassB, ClassC) {}
+  class ClassD {
+    @IsString()
+    alpha = 'defaultStringAlpha';
+  }
+
+  class ClassE {
+    @IsString()
+    beta = 'defaultStringBeta';
+  }
+
+  class UpdateUserDto extends IntersectionType(
+    ClassA,
+    ClassB,
+    ClassC,
+    ClassD,
+    ClassE,
+  ) {}
 
   describe('Validation metadata', () => {
     it('should inherit metadata for all properties from class A and class B', () => {
@@ -45,6 +61,8 @@ describe('IntersectionType', () => {
         'lastName',
         'hash',
         'patronymic',
+        'alpha',
+        'beta',
       ]);
     });
     describe('when object does not fulfil validation rules', () => {
@@ -74,6 +92,8 @@ describe('IntersectionType', () => {
         updateDto.lastName = 'lastNameTest';
         updateDto.login = 'mylogintesttest';
         updateDto.patronymic = 'patronymicTest';
+        updateDto.alpha = 'alphaTest';
+        updateDto.beta = 'betaTest';
 
         const validationErrors = await validate(updateDto);
         expect(validationErrors.length).toEqual(0);
@@ -105,6 +125,8 @@ describe('IntersectionType', () => {
       expect(updateUserDto.login).toEqual('defaultLoginWithMin10Chars');
       expect(updateUserDto.firstName).toEqual('defaultFirst');
       expect(updateUserDto.hash).toEqual('defaultHashWithMin5Chars');
+      expect(updateUserDto.alpha).toEqual('defaultStringAlpha');
+      expect(updateUserDto.beta).toEqual('defaultStringBeta');
     });
   });
 });
