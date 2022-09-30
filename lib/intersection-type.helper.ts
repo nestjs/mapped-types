@@ -1,4 +1,5 @@
 import { Type } from '@nestjs/common';
+
 import { MappedType } from './mapped-type.interface';
 import {
   inheritPropertyInitializers,
@@ -6,49 +7,45 @@ import {
   inheritValidationMetadata,
 } from './type-helpers.utils';
 
-export function IntersectionType<A, B>(
-  target: Type<A>,
-  source: Type<B>,
-): MappedType<A & B>;
+// https://stackoverflow.com/questions/50374908/transform-union-type-to-intersection-type
+type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
+  k: infer I,
+) => void
+  ? I
+  : never;
 
-export function IntersectionType<A, B, C>(
-  target: Type<A>,
-  sourceB: Type<B>,
-  sourceC: Type<C>,
-): MappedType<A & B & C>;
+// Converts ClassRefs array `Type<Class>[]` to `Class[]` using `infer`
+// e.g. `ClassRefsToConstructors<[Type<Foo>, Type<Bar>]>` becomes `[Foo, Bar]`
+type ClassRefsToConstructors<T extends Type[]> = {
+  [U in keyof T]: T[U] extends Type<infer V> ? V : never;
+};
 
-export function IntersectionType<A, B, C, D>(
-  target: Type<A>,
-  sourceB: Type<B>,
-  sourceC: Type<C>,
-  sourceD: Type<D>,
-): MappedType<A & B & C & D>;
+// Firstly, it uses indexed access type `Class[][number]` to convert `Class[]` to union type of it
+// e.g. `[Foo, Bar][number]` becomes `Foo | Bar`
+// then, uses the `UnionToIntersection` type to transform union type to intersection type
+// e.g. `Foo | Bar` becomes `Foo & Bar`
+// finally, returns `MappedType` passing the generated intersection type as a type argument
+type Intersection<T extends Type[]> = MappedType<
+  UnionToIntersection<ClassRefsToConstructors<T>[number]>
+>;
 
-export function IntersectionType<A, T extends { new (...arg: any): any }[]>(
-  classA: Type<A>,
-  ...classRefs: T
-): MappedType<A> {
-  const allClassRefs = [classA, ...classRefs];
-
+export function IntersectionType<T extends Type[]>(...classRefs: T) {
   abstract class IntersectionClassType {
     constructor() {
-      allClassRefs.forEach((classRef) => {
+      classRefs.forEach((classRef) => {
         inheritPropertyInitializers(this, classRef);
       });
     }
   }
 
-  allClassRefs.forEach((classRef) => {
+  classRefs.forEach((classRef) => {
     inheritValidationMetadata(classRef, IntersectionClassType);
     inheritTransformationMetadata(classRef, IntersectionClassType);
   });
 
-  const intersectedNames = allClassRefs.reduce(
-    (prev, ref) => prev + ref.name,
-    '',
-  );
+  const intersectedNames = classRefs.reduce((prev, ref) => prev + ref.name, '');
   Object.defineProperty(IntersectionClassType, 'name', {
     value: `Intersection${intersectedNames}`,
   });
-  return IntersectionClassType as MappedType<A>;
+  return IntersectionClassType as Intersection<T>;
 }
