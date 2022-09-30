@@ -14,7 +14,7 @@ type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
   ? I
   : never;
 
-// It converts ClassRefs array `Type<Class>[]` to `Class[]` by `infer`
+// Converts ClassRefs array `Type<Class>[]` to `Class[]` using `infer`
 // e.g. `ClassRefsToConstructors<[Type<Foo>, Type<Bar>]>` becomes `[Foo, Bar]`
 type ClassRefsToConstructors<T extends Type[]> = {
   [U in keyof T]: T[U] extends Type<infer V> ? V : never;
