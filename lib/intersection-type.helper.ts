@@ -22,9 +22,9 @@ type ClassRefsToConstructors<T extends Type[]> = {
 
 // Firstly, it uses indexed access type `Class[][number]` to convert `Class[]` to union type of it
 // e.g. `[Foo, Bar][number]` becomes `Foo | Bar`
-// then, it use the `UnionToIntersection` type to transform union type to intersection type
+// then, uses the `UnionToIntersection` type to transform union type to intersection type
 // e.g. `Foo | Bar` becomes `Foo & Bar`
-// finally, put them into `MappedType` as the original implementation
+// finally, returns `MappedType` passing the generated intersection type as a type argument
 type Intersection<T extends Type[]> = MappedType<
   UnionToIntersection<ClassRefsToConstructors<T>[number]>
 >;
