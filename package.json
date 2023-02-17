@@ -20,8 +20,8 @@
     "prepare": "husky install"
   },
   "devDependencies": {
-    "@commitlint/cli": "17.4.3",
-    "@commitlint/config-angular": "17.4.3",
+    "@commitlint/cli": "17.4.4",
+    "@commitlint/config-angular": "17.4.4",
     "@nestjs/common": "9.3.9",
     "@types/jest": "29.4.0",
     "@types/node": "18.13.0",
