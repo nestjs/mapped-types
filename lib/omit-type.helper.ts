@@ -5,11 +5,12 @@ import {
   inheritTransformationMetadata,
   inheritValidationMetadata,
 } from './type-helpers.utils';
+import { RemoveFieldsWithType } from './types/remove-fields-with-type.type';
 
 export function OmitType<T, K extends keyof T>(
   classRef: Type<T>,
   keys: readonly K[],
-): MappedType<Omit<T, (typeof keys)[number]>> {
+) {
   const isInheritedPredicate = (propertyKey: string) =>
     !keys.includes(propertyKey as K);
 
@@ -22,5 +23,7 @@ export function OmitType<T, K extends keyof T>(
   inheritValidationMetadata(classRef, OmitClassType, isInheritedPredicate);
   inheritTransformationMetadata(classRef, OmitClassType, isInheritedPredicate);
 
-  return OmitClassType as MappedType<Omit<T, (typeof keys)[number]>>;
+  return OmitClassType as MappedType<
+    RemoveFieldsWithType<Omit<T, (typeof keys)[number]>, Function>
+  >;
 }
