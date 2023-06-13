@@ -2,17 +2,12 @@ import { Type } from '@nestjs/common';
 import { MappedType } from './mapped-type.interface';
 import {
   applyIsOptionalDecorator,
-  inheritPropertyInitializers,
   inheritTransformationMetadata,
   inheritValidationMetadata,
 } from './type-helpers.utils';
 
 export function PartialType<T>(classRef: Type<T>): MappedType<Partial<T>> {
-  abstract class PartialClassType {
-    constructor() {
-      inheritPropertyInitializers(this, classRef);
-    }
-  }
+  abstract class PartialClassType {}
 
   const propertyKeys = inheritValidationMetadata(classRef, PartialClassType);
   inheritTransformationMetadata(classRef, PartialClassType);
