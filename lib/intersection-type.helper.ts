@@ -6,6 +6,7 @@ import {
   inheritTransformationMetadata,
   inheritValidationMetadata,
 } from './type-helpers.utils';
+import { RemoveFieldsWithType } from './types/remove-fields-with-type.type';
 
 // https://stackoverflow.com/questions/50374908/transform-union-type-to-intersection-type
 type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
@@ -26,7 +27,10 @@ type ClassRefsToConstructors<T extends Type[]> = {
 // e.g. `Foo | Bar` becomes `Foo & Bar`
 // finally, returns `MappedType` passing the generated intersection type as a type argument
 type Intersection<T extends Type[]> = MappedType<
-  UnionToIntersection<ClassRefsToConstructors<T>[number]>
+  RemoveFieldsWithType<
+    UnionToIntersection<ClassRefsToConstructors<T>[number]>,
+    Function
+  >
 >;
 
 export function IntersectionType<T extends Type[]>(...classRefs: T) {
@@ -47,5 +51,6 @@ export function IntersectionType<T extends Type[]>(...classRefs: T) {
   Object.defineProperty(IntersectionClassType, 'name', {
     value: `Intersection${intersectedNames}`,
   });
+
   return IntersectionClassType as Intersection<T>;
 }
