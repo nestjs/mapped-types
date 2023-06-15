@@ -6,8 +6,9 @@ import {
   inheritTransformationMetadata,
   inheritValidationMetadata,
 } from './type-helpers.utils';
+import { RemoveFieldsWithType } from './types/remove-fields-with-type.type';
 
-export function PartialType<T>(classRef: Type<T>): MappedType<Partial<T>> {
+export function PartialType<T>(classRef: Type<T>) {
   abstract class PartialClassType {
     constructor() {
       inheritPropertyInitializers(this, classRef);
@@ -26,5 +27,8 @@ export function PartialType<T>(classRef: Type<T>): MappedType<Partial<T>> {
   Object.defineProperty(PartialClassType, 'name', {
     value: `Partial${classRef.name}`,
   });
-  return PartialClassType as MappedType<Partial<T>>;
+
+  return PartialClassType as MappedType<
+    RemoveFieldsWithType<Partial<T>, Function>
+  >;
 }
