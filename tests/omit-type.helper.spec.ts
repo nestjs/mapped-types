@@ -22,10 +22,13 @@ describe('OmitType', () => {
       );
       expect(validationKeys).toEqual(['password']);
     });
+
     describe('when object does not fulfil validation rules', () => {
       it('"validate" should return validation errors', async () => {
         const updateDto = new UpdateUserDto();
         updateDto.password = '1234567';
+        // @ts-expect-error
+        updateDto.login;
 
         const validationErrors = await validate(updateDto);
 

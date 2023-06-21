@@ -39,6 +39,8 @@ describe('PickType', () => {
       it('"validate" should return an empty array', async () => {
         const updateDto = new UpdateUserDto();
         updateDto.login = '1234567891011';
+        // @ts-expect-error
+        updateDto.password;
 
         const validationErrors = await validate(updateDto);
         expect(validationErrors.length).toEqual(0);
