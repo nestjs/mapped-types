@@ -38,7 +38,7 @@
     "prettier": "3.0.3",
     "reflect-metadata": "0.1.13",
     "release-it": "16.1.5",
-    "rimraf": "5.0.1",
+    "rimraf": "5.0.5",
     "ts-jest": "29.1.1",
     "typescript": "5.2.2"
   },
