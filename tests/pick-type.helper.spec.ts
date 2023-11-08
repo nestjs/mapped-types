@@ -1,4 +1,4 @@
-import { instanceToInstance, Transform } from 'class-transformer';
+import { Expose, instanceToInstance, plainToInstance, Transform } from 'class-transformer';
 import { MinLength, validate } from 'class-validator';
 import { PickType } from '../lib';
 import { getValidationMetadataByTarget } from './type-helpers.test-utils';
@@ -56,6 +56,38 @@ describe('PickType', () => {
 
       const transformedDto = instanceToInstance(updateDto);
       expect(transformedDto.login).toEqual(login + '_transformed');
+    });
+
+    it('should inherit grandparent transformer metadata', () => {
+      const transformExecuteSequenceList: string[] = [];
+      class Grandparent {
+        @Expose()
+        @Transform(function grandparentTransform() {
+          transformExecuteSequenceList.push(Grandparent.name);
+          return 0;
+        })
+        value!: number;
+      }
+      class Parent extends Grandparent {
+        @Transform(function parentTransform() {
+          transformExecuteSequenceList.push(Parent.name);
+          return 1;
+        })
+        value!: number;
+      }
+      class Children extends PickType(Parent, ['value']) {
+        @Transform(function childrenTransform(params) {
+          transformExecuteSequenceList.push(Children.name);
+          return params.value
+        })
+        value!: number;
+      }
+
+      const childrenInstance = plainToInstance(Children, {});
+      expect(transformExecuteSequenceList[0]).toEqual(Grandparent.name);
+      expect(transformExecuteSequenceList[1]).toEqual(Parent.name);
+      expect(transformExecuteSequenceList[2]).toEqual(Children.name);
+      expect(childrenInstance.value).toEqual(1);
     });
   });
 
