@@ -156,12 +156,12 @@ function inheritTransformerMetadata(
         [existingRules, targetMetadataEntries].forEach((entries) => {
           for (const [valueKey, value] of entries) {
             if (mergeMap.has(valueKey)) {
-              if (Array.isArray(mergeMap.get(valueKey))) {
-                mergeMap
-                  .get(valueKey)!
-                  .push(...(Array.isArray(value) ? value : [value]));
+              const parentValue = mergeMap.get(valueKey);
+
+              if (Array.isArray(parentValue)) {
+                // Merge parent and child arrays
+                parentValue.push(...(Array.isArray(value) ? value : [value]));
               }
-              // do nothing, parent should not overwrite children metadata.
             } else {
               mergeMap.set(valueKey, value);
             }
