@@ -1,4 +1,10 @@
-import { instanceToInstance, Transform } from 'class-transformer';
+import {
+  Expose,
+  instanceToInstance,
+  plainToInstance,
+  Transform,
+  Type,
+} from 'class-transformer';
 import { MinLength, validate } from 'class-validator';
 import { OmitType } from '../lib';
 import { getValidationMetadataByTarget } from './type-helpers.test-utils';
@@ -57,6 +63,56 @@ describe('OmitType', () => {
 
       const transformedDto = instanceToInstance(updateDto);
       expect(transformedDto.password).toEqual(password + '_transformed');
+    });
+
+    it('should inherit expose and type transformer metadata', () => {
+      let isGrandparentTypeExecute = false;
+      let isParentTypeExecute = false;
+      class Grandparent {
+        @Expose()
+        a!: string | number;
+
+        @Expose()
+        @Type(function grandparentType() {
+          isGrandparentTypeExecute = true;
+          return Number;
+        })
+        b!: string | number;
+      }
+      class Parent extends OmitType(Grandparent, ['a']) {
+        @Expose()
+        @Type(function parentType() {
+          isParentTypeExecute = true;
+          return String;
+        })
+        b!: number;
+        c!: string; // not expose
+
+        @Type(() => Number)
+        d!: string | number;
+      }
+      class Children extends OmitType(Parent, ['d']) {
+        @Expose()
+        d!: string;
+      }
+
+      const childrenOmitInstance = plainToInstance(
+        Children,
+        { a: 'a', b: 'b', c: 'c', d: 'd' },
+        { excludeExtraneousValues: true },
+      );
+
+      const expectKeySet = new Set(['b', 'd']);
+      const concreteKeyList = Object.keys(childrenOmitInstance);
+      for (let i = 0; i < concreteKeyList.length; i++) {
+        expect(expectKeySet.has(concreteKeyList[i])).toEqual(true);
+      }
+      expect(concreteKeyList.length).toEqual(expectKeySet.size);
+      expect(isGrandparentTypeExecute).toEqual(false);
+      expect(isParentTypeExecute).toEqual(true);
+      expect(childrenOmitInstance.b).toEqual('b');
+      expect(childrenOmitInstance.c).toEqual(undefined);
+      expect(childrenOmitInstance.d).toEqual('d');
     });
   });
 
