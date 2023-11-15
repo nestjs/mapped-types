@@ -153,7 +153,6 @@ function inheritTransformerMetadata(
         const existingRules = metadataMap.get(targetClass)!.entries();
         const mergeMap = new Map<string, any[]>();
 
-        // array should merge, not overwrite.
         [existingRules, targetMetadataEntries].forEach((entries) => {
           for (const [valueKey, value] of entries) {
             if (mergeMap.has(valueKey)) {
