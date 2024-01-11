@@ -15,6 +15,20 @@ export function applyIsOptionalDecorator(
   decoratorFactory(targetClass.prototype, propertyKey);
 }
 
+export function applyValidateIfDefinedDecorator(
+  targetClass: Function,
+  propertyKey: string,
+) {
+  if (!isClassValidatorAvailable()) {
+    return;
+  }
+  const classValidator: typeof import('class-validator') = require('class-validator');
+  const decoratorFactory = classValidator.ValidateIf(
+    (_, value) => value !== undefined,
+  );
+  decoratorFactory(targetClass.prototype, propertyKey);
+}
+
 export function inheritValidationMetadata(
   parentClass: Type<any>,
   targetClass: Function,

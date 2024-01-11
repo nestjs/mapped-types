@@ -5,6 +5,7 @@ export * from './partial-type.helper';
 export * from './pick-type.helper';
 export {
   applyIsOptionalDecorator,
+  applyValidateIfDefinedDecorator,
   inheritPropertyInitializers,
   inheritTransformationMetadata,
   inheritValidationMetadata,
