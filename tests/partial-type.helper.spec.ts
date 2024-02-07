@@ -81,4 +81,44 @@ describe('PartialType', () => {
       expect(updateUserDto.login).toEqual('defaultLogin');
     });
   });
+
+  describe('Configuration options', () => {
+    it('should not ignore validations for null properties when `skipNullProperties` is false', async () => {
+      class UpdateUserDtoDisallowNull extends PartialType(CreateUserDto, {
+        skipNullProperties: false,
+      }) {}
+
+      const updateDto = new UpdateUserDtoDisallowNull();
+      updateDto.password = null as any;
+
+      const validationErrors = await validate(updateDto);
+
+      expect(validationErrors.length).toBe(1);
+      expect(validationErrors[0].constraints).toEqual({
+        isString: 'password must be a string',
+      });
+    });
+
+    it('should ignore validations on null properties when `skipNullProperties` is undefined', async () => {
+      const updateDto = new UpdateUserDto();
+      updateDto.password = null as any;
+
+      const validationErrors = await validate(updateDto);
+
+      expect(validationErrors.length).toBe(0);
+    });
+
+    it('should ignore validations on null properties when `skipNullProperties` is true', async () => {
+      class UpdateUserDtoAllowNull extends PartialType(CreateUserDto, {
+        skipNullProperties: true,
+      }) {}
+
+      const updateDto = new UpdateUserDtoAllowNull();
+      updateDto.password = null as any;
+
+      const validationErrors = await validate(updateDto);
+
+      expect(validationErrors.length).toBe(0);
+    });
+  });
 });
