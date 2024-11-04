@@ -95,6 +95,7 @@ export function inheritTransformationMetadata(
   parentClass: Type<any>,
   targetClass: Function,
   isPropertyInherited?: (key: string) => boolean,
+  stackDecorators = true
 ) {
   if (!isClassTransformerAvailable()) {
     return;
@@ -112,6 +113,7 @@ export function inheritTransformationMetadata(
         parentClass,
         targetClass,
         isPropertyInherited,
+        stackDecorators
       ),
     );
   } catch (err) {
@@ -127,6 +129,7 @@ function inheritTransformerMetadata(
   parentClass: Type<any>,
   targetClass: Function,
   isPropertyInherited?: (key: string) => boolean,
+  stackDecorators = true,
 ) {
   let classTransformer: any;
   try {
@@ -169,7 +172,7 @@ function inheritTransformerMetadata(
 
         [existingRules, targetMetadataEntries].forEach((entries) => {
           for (const [valueKey, value] of entries) {
-            if (mergeMap.has(valueKey)) {
+            if (mergeMap.has(valueKey) && stackDecorators) {
               const parentValue = mergeMap.get(valueKey);
 
               if (Array.isArray(parentValue)) {
