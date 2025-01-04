@@ -21,7 +21,7 @@
   },
   "devDependencies": {
     "@commitlint/cli": "19.6.1",
-    "@commitlint/config-angular": "19.6.0",
+    "@commitlint/config-angular": "19.7.0",
     "@nestjs/common": "10.4.15",
     "@types/jest": "29.5.14",
     "@types/node": "22.10.5",
