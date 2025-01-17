@@ -44,7 +44,12 @@ export function IntersectionType<T extends Type[]>(...classRefs: T) {
 
   classRefs.forEach((classRef) => {
     inheritValidationMetadata(classRef, IntersectionClassType);
-    inheritTransformationMetadata(classRef, IntersectionClassType, undefined, false);
+    inheritTransformationMetadata(
+      classRef,
+      IntersectionClassType,
+      undefined,
+      false,
+    );
   });
 
   const intersectedNames = classRefs.reduce((prev, ref) => prev + ref.name, '');

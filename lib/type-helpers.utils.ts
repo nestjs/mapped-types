@@ -1,6 +1,5 @@
 import { Logger, Type } from '@nestjs/common';
 
-/* eslint-disable @typescript-eslint/no-var-requires */
 const logger = new Logger('MappedTypes');
 
 export function applyIsOptionalDecorator(
@@ -95,7 +94,7 @@ export function inheritTransformationMetadata(
   parentClass: Type<any>,
   targetClass: Function,
   isPropertyInherited?: (key: string) => boolean,
-  stackDecorators = true
+  stackDecorators = true,
 ) {
   if (!isClassTransformerAvailable()) {
     return;
@@ -113,7 +112,7 @@ export function inheritTransformationMetadata(
         parentClass,
         targetClass,
         isPropertyInherited,
-        stackDecorators
+        stackDecorators,
       ),
     );
   } catch (err) {
@@ -231,5 +230,7 @@ export function inheritPropertyInitializers(
       .forEach((propertyName) => {
         target[propertyName] = tempInstance[propertyName];
       });
-  } catch {}
+  } catch {
+    // Ignore errors
+  }
 }
