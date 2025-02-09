@@ -7,6 +7,9 @@ import {
 } from './type-helpers.utils';
 import { RemoveFieldsWithType } from './types/remove-fields-with-type.type';
 
+/**
+ * @publicApi
+ */
 export function OmitType<T, K extends keyof T>(
   classRef: Type<T>,
   keys: readonly K[],
