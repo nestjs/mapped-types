@@ -33,6 +33,9 @@ type Intersection<T extends Type[]> = MappedType<
   >
 >;
 
+/**
+ * @publicApi
+ */
 export function IntersectionType<T extends Type[]>(...classRefs: T) {
   abstract class IntersectionClassType {
     constructor() {
