@@ -26,7 +26,7 @@
     "@eslint/js": "9.35.0",
     "@nestjs/common": "11.1.6",
     "@types/jest": "30.0.0",
-    "@types/node": "22.18.4",
+    "@types/node": "22.18.5",
     "class-transformer": "0.5.1",
     "class-validator": "0.14.2",
     "eslint": "9.35.0",
