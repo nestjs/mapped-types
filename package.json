@@ -41,7 +41,7 @@
     "release-it": "19.0.5",
     "rimraf": "6.0.1",
     "ts-jest": "29.4.4",
-    "typescript": "5.9.2",
+    "typescript": "5.9.3",
     "typescript-eslint": "8.45.0"
   },
   "peerDependencies": {
