@@ -1,11 +1,11 @@
-import { Type } from '@nestjs/common';
-import { MappedType } from './mapped-type.interface';
+import type { Type } from '@nestjs/common';
+import type { MappedType } from './mapped-type.interface';
 import {
   inheritPropertyInitializers,
   inheritTransformationMetadata,
   inheritValidationMetadata,
 } from './type-helpers.utils';
-import { RemoveFieldsWithType } from './types/remove-fields-with-type.type';
+import type { RemoveFieldsWithType } from './types/remove-fields-with-type.type';
 
 /**
  * @publicApi

@@ -1,4 +1,4 @@
-import { Logger, Type } from '@nestjs/common';
+import { Logger, type Type } from '@nestjs/common';
 
 const logger = new Logger('MappedTypes');
 
