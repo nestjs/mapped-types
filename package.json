@@ -20,8 +20,8 @@
     "prepare": "husky"
   },
   "devDependencies": {
-    "@commitlint/cli": "21.0.1",
-    "@commitlint/config-angular": "21.0.1",
+    "@commitlint/cli": "21.0.2",
+    "@commitlint/config-angular": "21.0.2",
     "@nestjs/common": "11.1.24",
     "@types/node": "24.12.4",
     "class-transformer": "0.5.1",
