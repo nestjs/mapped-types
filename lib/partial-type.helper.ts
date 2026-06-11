@@ -1,13 +1,13 @@
 import type { Type } from '@nestjs/common';
-import type { MappedType } from './mapped-type.interface';
+import type { MappedType } from './mapped-type.interface.js';
 import {
   applyIsOptionalDecorator,
   applyValidateIfDefinedDecorator,
   inheritPropertyInitializers,
   inheritTransformationMetadata,
   inheritValidationMetadata,
-} from './type-helpers.utils';
-import type { RemoveFieldsWithType } from './types/remove-fields-with-type.type';
+} from './type-helpers.utils.js';
+import type { RemoveFieldsWithType } from './types/remove-fields-with-type.type.js';
 
 /**
  * @publicApi
