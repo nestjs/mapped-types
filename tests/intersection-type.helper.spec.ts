@@ -1,7 +1,7 @@
 import { instanceToInstance, Transform } from 'class-transformer';
 import { IsString, MinLength, validate } from 'class-validator';
-import { IntersectionType } from '../lib';
-import { getValidationMetadataByTarget } from './type-helpers.test-utils';
+import { IntersectionType } from '../lib/index.js';
+import { getValidationMetadataByTarget } from './type-helpers.test-utils.js';
 
 describe('IntersectionType', () => {
   class ClassA {
