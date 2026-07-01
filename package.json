@@ -1,10 +1,20 @@
 {
   "name": "@nestjs/mapped-types",
   "version": "2.1.1",
+  "type": "module",
   "description": "Nest - modern, fast, powerful node.js web framework (@mapped-types)",
   "author": "Kamil Mysliwiec",
   "license": "MIT",
   "url": "https://github.com/nestjs/mapped-types#readme",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
   "scripts": {
     "build": "rimraf -rf dist && tsc -p tsconfig.json",
     "lint": "oxlint lib/ --fix",
