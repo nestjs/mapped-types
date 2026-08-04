@@ -1,7 +1,7 @@
 import { Expose, instanceToInstance, plainToInstance, Transform } from 'class-transformer';
 import { MinLength, validate } from 'class-validator';
-import { PickType } from '../lib';
-import { getValidationMetadataByTarget } from './type-helpers.test-utils';
+import { PickType } from '../lib/index.js';
+import { getValidationMetadataByTarget } from './type-helpers.test-utils.js';
 
 describe('PickType', () => {
   class CreateUserDto {

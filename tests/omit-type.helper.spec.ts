@@ -6,8 +6,8 @@ import {
   Type,
 } from 'class-transformer';
 import { MinLength, validate } from 'class-validator';
-import { OmitType } from '../lib';
-import { getValidationMetadataByTarget } from './type-helpers.test-utils';
+import { OmitType } from '../lib/index.js';
+import { getValidationMetadataByTarget } from './type-helpers.test-utils.js';
 
 describe('OmitType', () => {
   class CreateUserDto {
