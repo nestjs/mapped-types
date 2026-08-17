@@ -1,6 +1,6 @@
 {
   "name": "@nestjs/mapped-types",
-  "version": "2.1.1",
+  "version": "3.0.0",
   "type": "module",
   "description": "Nest - modern, fast, powerful node.js web framework (@mapped-types)",
   "author": "Kamil Mysliwiec",
@@ -13,7 +13,11 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "default": "./dist/index.js"
-    }
+    },
+    "./package.json": "./package.json"
+  },
+  "engines": {
+    "node": ">=20.19.0"
   },
   "scripts": {
     "build": "rimraf -rf dist && tsc -p tsconfig.json",
@@ -25,6 +29,7 @@
     "publish:next": "npm publish --access public --tag next",
     "test:e2e": "vitest run",
     "test:e2e:dev": "vitest --watch",
+    "test:esm": "npm run build && node tests/esm-smoke.mjs",
     "prerelease": "npm run build",
     "release": "release-it",
     "prepare": "husky"
