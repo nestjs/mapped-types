@@ -1,7 +1,7 @@
 import { Expose, instanceToInstance, Transform, Type } from 'class-transformer';
 import { IsString, validate } from 'class-validator';
-import { PartialType } from '../lib';
-import { getValidationMetadataByTarget } from './type-helpers.test-utils';
+import { PartialType } from '../lib/index.js';
+import { getValidationMetadataByTarget } from './type-helpers.test-utils.js';
 
 describe('PartialType', () => {
   class BaseUserDto {

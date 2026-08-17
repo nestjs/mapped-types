@@ -44,6 +44,9 @@ jobs:
       - run:
           name: Integration tests
           command: npm run test:e2e
+      - run:
+          name: ESM smoke test (built output)
+          command: npm run test:esm
 
 workflows:
   version: 2

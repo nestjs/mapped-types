@@ -1,4 +1,7 @@
 import { Logger, type Type } from '@nestjs/common';
+import { createRequire } from 'node:module';
+
+const require = createRequire(import.meta.url);
 
 const logger = new Logger('MappedTypes');
 
