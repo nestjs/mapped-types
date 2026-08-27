@@ -1,6 +1,6 @@
 {
   "name": "@nestjs/mapped-types",
-  "version": "3.0.0",
+  "version": "12.0.0",
   "type": "module",
   "description": "Nest - modern, fast, powerful node.js web framework (@mapped-types)",
   "author": "Kamil Mysliwiec",
