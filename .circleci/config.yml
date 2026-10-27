@@ -1,4 +1,4 @@
-version: 2
+version: 2.1
 
 aliases:
   - &restore-cache
@@ -49,7 +49,6 @@ jobs:
           command: npm run test:esm
 
 workflows:
-  version: 2
   build-and-test:
     jobs:
       - build
