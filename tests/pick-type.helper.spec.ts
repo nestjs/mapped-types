@@ -1,5 +1,10 @@
-import { Expose, instanceToInstance, plainToInstance, Transform } from 'class-transformer';
-import { MinLength, validate } from 'class-validator';
+import {
+  Expose,
+  instanceToInstance,
+  plainToInstance,
+  Transform,
+} from 'class-transformer';
+import { IsNumber, MinLength, validate } from 'class-validator';
 import { PickType } from '../lib/index.js';
 import { getValidationMetadataByTarget } from './type-helpers.test-utils.js';
 
@@ -78,7 +83,7 @@ describe('PickType', () => {
       class Children extends PickType(Parent, ['value']) {
         @Transform(function childrenTransform(params) {
           transformExecuteSequenceList.push(Children.name);
-          return params.value
+          return params.value;
         })
         value!: number;
       }
@@ -96,6 +101,24 @@ describe('PickType', () => {
       const updateUserDto = new UpdateUserDto();
       expect((updateUserDto as any)['password']).toBeUndefined();
       expect(updateUserDto.login).toEqual('defaultLogin');
+    });
+  });
+  describe('when a key is a number', () => {
+    class PricesDto {
+      @IsNumber()
+      0!: number;
+
+      @IsNumber()
+      1!: number;
+    }
+
+    class PublicPricesDto extends PickType(PricesDto, [0]) {}
+
+    it('should inherit the validation metadata of the picked property', () => {
+      const validationKeys = getValidationMetadataByTarget(PublicPricesDto).map(
+        (item) => item.propertyName,
+      );
+      expect(validationKeys).toEqual(['0']);
     });
   });
 });

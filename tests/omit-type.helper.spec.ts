@@ -5,7 +5,7 @@ import {
   Transform,
   Type,
 } from 'class-transformer';
-import { MinLength, validate } from 'class-validator';
+import { IsNumber, MinLength, validate } from 'class-validator';
 import { OmitType } from '../lib/index.js';
 import { getValidationMetadataByTarget } from './type-helpers.test-utils.js';
 
@@ -121,6 +121,34 @@ describe('OmitType', () => {
       const updateUserDto = new UpdateUserDto();
       expect((updateUserDto as any)['login']).toBeUndefined();
       expect(updateUserDto.password).toEqual('defaultPassword');
+    });
+  });
+  describe('when a key is a number', () => {
+    class PricesDto {
+      @IsNumber()
+      0!: number;
+
+      @IsNumber()
+      1!: number;
+    }
+
+    class PublicPricesDto extends OmitType(PricesDto, [1]) {}
+
+    it('should not inherit the validation metadata of the omitted property', () => {
+      const validationKeys = getValidationMetadataByTarget(PublicPricesDto).map(
+        (item) => item.propertyName,
+      );
+      expect(validationKeys).toEqual(['0']);
+    });
+
+    it('should not whitelist the omitted property', async () => {
+      const dto = Object.assign(new PublicPricesDto(), { 0: 1, 1: 2 });
+
+      const validationErrors = await validate(dto, {
+        whitelist: true,
+        forbidNonWhitelisted: true,
+      });
+      expect(validationErrors.map((error) => error.property)).toEqual(['1']);
     });
   });
 });

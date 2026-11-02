@@ -14,8 +14,13 @@ export function PickType<T, K extends keyof T>(
   classRef: Type<T>,
   keys: readonly K[],
 ) {
+  // Property keys are passed as strings, whereas "keyof T" is a number for a
+  // numeric property (e.g. a numeric enum member)
+  const pickedKeys = keys.map((key) =>
+    typeof key === 'number' ? String(key) : key,
+  );
   const isInheritedPredicate = (propertyKey: string) =>
-    keys.includes(propertyKey as K);
+    pickedKeys.includes(propertyKey);
 
   abstract class PickClassType {
     constructor() {
