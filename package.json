@@ -2,7 +2,17 @@
   "name": "@nestjs/mapped-types",
   "version": "12.0.1",
   "type": "module",
-  "description": "Nest - modern, fast, powerful node.js web framework (@mapped-types)",
+  "description": "Derive NestJS DTOs from other classes with PartialType, PickType, OmitType and IntersectionType, keeping their validation and transformation rules.",
+  "keywords": [
+    "nestjs",
+    "nest",
+    "dto",
+    "mapped-types",
+    "partial-type",
+    "class-validator",
+    "class-transformer",
+    "typescript"
+  ],
   "author": "Kamil Mysliwiec",
   "license": "MIT",
   "url": "https://github.com/nestjs/mapped-types#readme",
