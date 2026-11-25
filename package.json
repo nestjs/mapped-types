@@ -47,7 +47,7 @@
   "devDependencies": {
     "@commitlint/cli": "21.2.4",
     "@commitlint/config-angular": "21.2.4",
-    "@nestjs/common": "12.6.0",
+    "@nestjs/common": "12.6.2",
     "@types/node": "26.6.10",
     "class-transformer": "0.5.1",
     "class-validator": "0.15.1",
