@@ -1,4 +1,4 @@
-import { instanceToInstance, Transform } from 'class-transformer';
+import { Expose, instanceToInstance, instanceToPlain, Transform } from 'class-transformer';
 import { IsString, MinLength, validate } from 'class-validator';
 import { IntersectionType } from '../lib/index.js';
 import { getValidationMetadataByTarget } from './type-helpers.test-utils.js';
@@ -98,6 +98,42 @@ describe('IntersectionType', () => {
       expect(transformedDto.lastName).toEqual(lastName + '_transformed');
       expect(transformedDto.password).toEqual(password + '_transformed');
       expect(transformedDto.repeatedProperty).toEqual(repeatedProperty + '_transformed');
+    });
+  });
+
+  describe('Transformer metadata of a class that overrides an inherited property', () => {
+    class Base {
+      @Expose({ name: 'baseName' })
+      @Transform(({ value }) => value + '_base')
+      title!: string;
+    }
+
+    class Child extends Base {
+      @Expose({ name: 'childName' })
+      @Transform(({ value }) => value + '_child')
+      title!: string;
+    }
+
+    class Other {
+      other = 1;
+    }
+
+    it('should apply the same metadata as the class itself', () => {
+      class Dto extends IntersectionType(Child, Other) {}
+
+      const child = new Child();
+      child.title = 'x';
+      const dto = new Dto();
+      (dto as any).title = 'x';
+
+      expect(instanceToPlain(dto)).toEqual({
+        ...instanceToPlain(child),
+        other: 1,
+      });
+      expect(instanceToPlain(dto)).toEqual({
+        childName: 'x_base_child',
+        other: 1,
+      });
     });
   });
 

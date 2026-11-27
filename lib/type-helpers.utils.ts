@@ -144,12 +144,15 @@ function inheritTransformerMetadata(
   const metadataStorage /*: typeof import('class-transformer/types/storage').defaultMetadataStorage */ =
     classTransformer.defaultMetadataStorage;
 
+  // The metadata of the class and of its ancestors always stack (the class
+  // first), like `class-transformer` does for the class itself. `stackDecorators`
+  // only decides what happens with the metadata the target already got from
+  // another class.
+  let inherited = new Map<string, any>();
+  const metadataMap = metadataStorage[key] as Map<Function, Map<string, any>>;
+
   while (parentClass && parentClass !== Object) {
-    if (metadataStorage[key].has(parentClass)) {
-      const metadataMap = metadataStorage[key] as Map<
-        Function,
-        Map<string, any>
-      >;
+    if (metadataMap.has(parentClass)) {
       const parentMetadata = metadataMap.get(parentClass);
 
       const targetMetadataEntries: Iterable<[string, any]> = Array.from(
@@ -168,31 +171,52 @@ function inheritTransformerMetadata(
           return [key, { ...metadata, target: targetClass }];
         });
 
-      if (metadataMap.has(targetClass)) {
-        const existingRules = metadataMap.get(targetClass)!.entries();
-        const mergeMap = new Map<string, any[]>();
-
-        [existingRules, targetMetadataEntries].forEach((entries) => {
-          for (const [valueKey, value] of entries) {
-            if (mergeMap.has(valueKey) && stackDecorators) {
-              const parentValue = mergeMap.get(valueKey);
-
-              if (Array.isArray(parentValue)) {
-                // Merge parent and child arrays
-                parentValue.push(...(Array.isArray(value) ? value : [value]));
-              }
-            } else {
-              mergeMap.set(valueKey, value);
-            }
-          }
-        });
-        metadataMap.set(targetClass, mergeMap);
-      } else {
-        metadataMap.set(targetClass, new Map(targetMetadataEntries));
-      }
+      inherited = mergeMetadata(
+        inherited.entries(),
+        targetMetadataEntries,
+        true,
+      );
     }
     parentClass = Object.getPrototypeOf(parentClass);
   }
+
+  if (inherited.size === 0) {
+    return;
+  }
+  metadataMap.set(
+    targetClass,
+    metadataMap.has(targetClass)
+      ? mergeMetadata(
+          metadataMap.get(targetClass)!.entries(),
+          inherited.entries(),
+          stackDecorators,
+        )
+      : inherited,
+  );
+}
+
+function mergeMetadata(
+  existingRules: Iterable<[string, any]>,
+  newRules: Iterable<[string, any]>,
+  stackDecorators: boolean,
+) {
+  const mergeMap = new Map<string, any>();
+
+  [existingRules, newRules].forEach((entries) => {
+    for (const [valueKey, value] of entries) {
+      if (mergeMap.has(valueKey) && stackDecorators) {
+        const parentValue = mergeMap.get(valueKey);
+
+        if (Array.isArray(parentValue)) {
+          // Merge parent and child arrays
+          parentValue.push(...(Array.isArray(value) ? value : [value]));
+        }
+      } else {
+        mergeMap.set(valueKey, value);
+      }
+    }
+  });
+  return mergeMap;
 }
 
 function isClassValidatorAvailable() {
